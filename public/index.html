@@ -5,9 +5,33 @@
 </head>
 <body>
   <p> This is working </p>
+  
+  <input id="main-input" type="text"/>
+  <button id="main-button"> Send </button>
+
   <script src="/socket.io/socket.io.js"></script>
   <script>
-    var socket = io();
+    const mainInput = document.querySelector('#main-input');
+    const mainButton = document.querySelector('#main-button');
+    const socket = io();
+
+    socket.on('serverMessage', (payload) => {
+      console.log('serverMessage', payload);
+    });
+
+    function sendMessage() {
+      const message = mainInput.value;
+      mainInput.value = '';
+
+      console.log('clientMessage', message);
+      socket.emit('clientMessage', message);
+    }
+
+    mainButton.addEventListener('click', sendMessage);
+    mainInput.addEventListener('keyup', (e) => {
+      if (e.keyCode === 13) sendMessage();
+    })
+
   </script>
 </body>
 </html>
